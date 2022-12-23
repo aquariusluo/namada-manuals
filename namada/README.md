@@ -77,9 +77,17 @@ sudo systemctl restart namadad && sudo journalctl -u namadad -f -o cat
 
 #Make wallet and run validator
 cd $HOME
-namada wallet address gen --alias wallet_name
+namada wallet address gen --alias $wallet_name
 #enter pass
-namada client init-validator --alias $VALIDATOR_ALIAS --source wallet_name --commission-rate 0.05 --max-commission-rate-change 0.01
+#get faucet to $wallet_name
+namadac transfer \
+    --token NAM \
+    --amount 1000 \
+    --source faucet \
+    --target $wallet_name \
+    --signer $wallet_name
+    
+namada client init-validator --alias $VALIDATOR_ALIAS --source $wallet_name --commission-rate 0.05 --max-commission-rate-change 0.01
 #enter pass
 
 cd $HOME
